@@ -1,5 +1,7 @@
-package com.github.lucasaquiles.config;
+package com.github.lucasaquiles.consumer;
 
+import com.github.lucasaquiles.config.DeclaredQueuesEnum;
+import com.github.lucasaquiles.config.QueueConfig;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.Envelope;
@@ -14,9 +16,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @ApplicationScoped
-public class DefaultListenerConfig  implements Consumer{
+public class SampleQueueConsumer implements Consumer{
 
-    private final Logger log = LoggerFactory.getLogger(DefaultListenerConfig.class);
+    private final Logger log = LoggerFactory.getLogger(SampleQueueConsumer.class);
 
     public void onApplicationStart(@Observes StartupEvent event, QueueConfig queueConfig) {
         queueConfig.appendConsumer(DeclaredQueuesEnum.SAMPLE_QUEUE, this);
