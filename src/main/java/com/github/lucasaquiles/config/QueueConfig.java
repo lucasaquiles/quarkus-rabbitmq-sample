@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 @ApplicationScoped
 public class QueueConfig {
 
@@ -95,23 +93,10 @@ public class QueueConfig {
 
     public void appendConsumer(DeclaredQueuesEnum declaredQueuesEnum, Consumer consumer) {
         try{
-
             Connection connection = rabbitMQClient.connect();
             Channel channel = connection.createChannel();
             channel.basicConsume(declaredQueuesEnum.getQueueName(), true, consumer);
-
         }catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public void send(String message) {
-        try {
-            log.info("M=send, I=preparando mensagem. message={}", message);
-            channel.basicPublish(DeclaredQueuesEnum.SAMPLE_QUEUE.getExchangeName(), DeclaredQueuesEnum.SAMPLE_QUEUE.getExchangeName(), null, message.getBytes(UTF_8));
-            log.info("M=send, I=mensagem enviada. message={}", message);
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
