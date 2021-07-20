@@ -28,14 +28,8 @@ public abstract class AbstractMessageConsumer<P> implements Consumer{
     abstract public DeclaredQueuesEnum getQueue();
     abstract void consumes(P payload);
 
-
-
     @Inject
     private ObjectMapper objectMapper;
-
-//    public AbstractMessageConsumer(Class<P> clazz) {
-//        this.clazz = clazz;
-//    }
 
     public void onApplicationStart(@Observes StartupEvent event, QueueConfig queueConfig) {
         queueConfig.appendConsumer(getQueue(), this);
