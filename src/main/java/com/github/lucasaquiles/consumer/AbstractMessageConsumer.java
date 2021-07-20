@@ -1,5 +1,6 @@
 package com.github.lucasaquiles.consumer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.lucasaquiles.config.DeclaredQueuesEnum;
 import com.github.lucasaquiles.config.QueueConfig;
 import com.rabbitmq.client.AMQP;
@@ -10,18 +11,34 @@ import io.quarkus.runtime.StartupEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
-@ApplicationScoped
-public class SampleQueueConsumer implements Consumer{
+public abstract class AbstractMessageConsumer<P> implements Consumer{
 
-    private final Logger log = LoggerFactory.getLogger(SampleQueueConsumer.class);
+    private final Logger log = LoggerFactory.getLogger(AbstractMessageConsumer.class);
+
+    private final Class<P> clazz;
+
+    public AbstractMessageConsumer(Class<P> clazz) {
+        this.clazz = clazz;
+    }
+
+    abstract public DeclaredQueuesEnum getQueue();
+    abstract void consumes(P payload);
+
+
+
+    @Inject
+    private ObjectMapper objectMapper;
+
+//    public AbstractMessageConsumer(Class<P> clazz) {
+//        this.clazz = clazz;
+//    }
 
     public void onApplicationStart(@Observes StartupEvent event, QueueConfig queueConfig) {
-        queueConfig.appendConsumer(DeclaredQueuesEnum.SAMPLE_QUEUE, this);
+        queueConfig.appendConsumer(getQueue(), this);
     }
 
     @Override
@@ -51,8 +68,13 @@ public class SampleQueueConsumer implements Consumer{
 
     @Override
     public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-        final String message = new String(body, StandardCharsets.UTF_8);
 
-        log.info("M=handleDelivery, I=consumindo mensagem={}", message);
+        try {
+            final P payload = objectMapper.readValue(body, clazz);
+            consumes(payload);
+            log.info("M=handleDelivery, I=consumindo mensagem={}", payload);
+        }catch(Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
