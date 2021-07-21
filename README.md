@@ -1,8 +1,5 @@
 # smallrey-rabbitmq-sample Project
 
-curl -X POST http://localhost:8080/message/retriable -H "Content-Type: application/json" -d '{"name":"nome", "email":"email@email.cmo"}'
-curl -X POST http://localhost:8080/message/ -H "Content-Type: application/json" -d '{"name":"nome", "email":"email@email.cmo"}'
-
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
@@ -12,6 +9,13 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 You can run your application in dev mode that enables live coding using:
 ```shell script
 ./gradlew quarkusDev
+```
+
+Examples 
+
+```shell script
+curl -X POST http://localhost:8080/message/retriable -H "Content-Type: application/json" -d '{"name":"simple name", "email":"email@email.com"}'
+curl -X POST http://localhost:8080/message/ -H "Content-Type: application/json" -d '{"name":"name", "email":"email@email.com"}'
 ```
 
 > **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
