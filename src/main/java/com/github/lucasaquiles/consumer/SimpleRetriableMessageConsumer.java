@@ -7,24 +7,24 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 
-
 @Superior
 @Singleton
-public class SampleMessageConsumer extends AbstractMessageConsumer<BasicInformation> {
+public class SimpleRetriableMessageConsumer extends AbstractMessageConsumer<BasicInformation> {
 
-    private final Logger log = LoggerFactory.getLogger(SampleMessageConsumer.class);
+    private Logger log = LoggerFactory.getLogger(SimpleRetriableMessageConsumer.class);
 
-    public SampleMessageConsumer() {
+    public SimpleRetriableMessageConsumer() {
         super(BasicInformation.class);
     }
 
     @Override
     public DeclaredQueuesEnum getQueue() {
-        return DeclaredQueuesEnum.SAMPLE_QUEUE;
+        return DeclaredQueuesEnum.SAMPLE_QUEUE_TWO;
     }
 
     @Override
     void consumes(BasicInformation payload) {
-        log.info("M=consumes, I=mensagem. payload={}", payload);
+        log.info("M=consumer, I=recebeu a mensagem no consumer. payload={}", payload);
+        throw new RuntimeException("away exception");
     }
 }

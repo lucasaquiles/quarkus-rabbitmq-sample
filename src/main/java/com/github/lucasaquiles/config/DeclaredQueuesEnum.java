@@ -3,7 +3,7 @@ package com.github.lucasaquiles.config;
 public enum DeclaredQueuesEnum {
 
     SAMPLE_QUEUE("queue-sample", false, 5, 5, RetryStrategyEnum.NONE),
-    SAMPLE_QUEUE_TWO("sample-queue-two", true, 5, 5, RetryStrategyEnum.NONE);
+    SAMPLE_QUEUE_TWO("sample-queue-two", true, 2, 1, RetryStrategyEnum.NONE);
 
     private String queueName;
     private String exchangeName;

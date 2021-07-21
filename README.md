@@ -1,5 +1,8 @@
 # smallrey-rabbitmq-sample Project
 
+curl -X POST http://localhost:8080/message/retriable -H "Content-Type: application/json" -d '{"name":"nome", "email":"email@email.cmo"}'
+curl -X POST http://localhost:8080/message/ -H "Content-Type: application/json" -d '{"name":"nome", "email":"email@email.cmo"}'
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
