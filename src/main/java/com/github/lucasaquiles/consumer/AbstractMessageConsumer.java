@@ -5,6 +5,7 @@ import com.github.lucasaquiles.config.DeclaredQueuesEnum;
 import com.github.lucasaquiles.config.QueueConfig;
 import com.github.lucasaquiles.producer.MessageSender;
 import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.ShutdownSignalException;
@@ -16,9 +17,13 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public abstract class AbstractMessageConsumer<P> implements Consumer {
 
@@ -69,12 +74,12 @@ public abstract class AbstractMessageConsumer<P> implements Consumer {
     }
 
     @Override
-    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+    public void handleDelivery(final String consumerTag, final Envelope envelope, final BasicProperties properties, final byte[] body) {
 
         try {
             final P payload = objectMapper.readValue(body, clazz);
             consumes(payload);
-            log.info("M=handleDelivery, I=consumindo mensagem={}", payload);
+            log.info("M=handleDelivery, I=mensagem consumida. mensagem={}", payload);
         } catch (Exception e) {
 
             log.error("M=handleDelivery, E=erro durante consumo. message={}", e.getMessage());
@@ -90,10 +95,11 @@ public abstract class AbstractMessageConsumer<P> implements Consumer {
         long count = calcRetryCount(properties);
 
         if (count < getQueue().getMaxRetry()) {
-            long retryInterval = getQueue().getInterval() * 1000L * count;
 
-            log.info("M=retry, I=deve retentar em, ttl={}", retryInterval);
-            final AMQP.BasicProperties updatedMessagePropertie = updateMessagePropertie(properties, retryInterval);
+            long retryInterval = getQueue().calculateRetryInterval(count);
+
+            log.info("M=retry, I=deve retentar em, ttl={}", Duration.of(retryInterval, ChronoUnit.SECONDS).toSeconds());
+            final BasicProperties updatedMessagePropertie = updateMessagePropertie(properties, retryInterval);
 
             messageSender.send(getQueue().getRetryName(), getQueue().getExchangeName(), new String(body, StandardCharsets.UTF_8), updatedMessagePropertie);
         } else {
@@ -105,15 +111,16 @@ public abstract class AbstractMessageConsumer<P> implements Consumer {
 
     private long calcRetryCount(AMQP.BasicProperties properties) {
         long count = 0L;
+
         final Map<String, Object> headers = properties.getHeaders();
 
         if (headers.containsKey(X_DEATH)) {
 
-            final List list = (List) Collections.singletonList(headers.get(X_DEATH)).get(0);
-            count = Long.parseLong( ((Map) list).get("count").toString());
+            final List list = (List) Collections.singletonList( headers.get(X_DEATH) ).get(0);
+            count = Long.parseLong( ((Map) list.get(0)).get("count").toString());
         }
-        ++count;
-        return count;
+
+        return count++;
     }
 
     private AMQP.BasicProperties updateMessagePropertie(final AMQP.BasicProperties properties, final long ttl) {
