@@ -1,12 +1,13 @@
 package com.github.lucasaquiles.config.properties;
 
-import com.github.lucasaquiles.config.properties.RabbitMQPropertiesConfig;
 import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithParentName;
 
 import java.util.Map;
 
-@ConfigMapping(prefix = "queue-policy", namingStrategy = ConfigMapping.NamingStrategy.VERBATIM)
+@ConfigMapping(prefix = "rabbit-queue")
 public interface QueuePolicyConfig {
 
-    Map<String, RabbitMQPropertiesConfig> myQueueName();
+    @WithParentName
+    Map<String, RabbitMQPropertiesConfig> queuePolicy();
 }

@@ -12,5 +12,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Any
 @Retention(RUNTIME)
 @Target({METHOD, FIELD, PARAMETER, TYPE})
-@interface Superior {
+public @interface Superior {
 }

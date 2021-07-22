@@ -1,19 +1,21 @@
 package com.github.lucasaquiles.config.properties;
 
-public class RabbitMQPropertiesConfig {
+public interface RabbitMQPropertiesConfig {
 
-    public boolean retryable;
+    RetryPolicy retryPolicy();
 
-    public int maxRetry;
+    String exchange();
+    boolean dlq();
 
-    public boolean dlq;
 
-    @Override
-    public String toString() {
-        return "RabbitMQPropertiesConfig{" +
-                "retryable=" + retryable +
-                ", maxRetry=" + maxRetry +
-                ", dlq=" + dlq +
-                '}';
-    }
+
+
+//    @Override
+//    public String toString() {
+//        return "RabbitMQPropertiesConfig{" +
+//                "retryable=" + retryable +
+//                ", maxRetry=" + maxRetry +
+//                ", dlq=" + dlq +
+//                '}';
+//    }
 }

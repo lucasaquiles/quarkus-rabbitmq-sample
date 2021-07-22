@@ -1,5 +1,6 @@
 package com.github.lucasaquiles.config;
 
+import com.github.lucasaquiles.config.properties.QueuePolicyConfig;
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -25,11 +26,15 @@ public class QueueConfig {
     @Inject
     private RabbitMQClient rabbitMQClient;
 
+    @Inject
+    private QueuePolicyConfig queuePolicyConfig;
+
     private Channel channel;
 
     public void onApplicationStart(@Observes StartupEvent startupEvent) {
 
-        log.info("M=onApplicationStart, I=starting queue config. conf={}");
+        log.info("M=onApplicationStart, I=starting queue config. conf={}", queuePolicyConfig);
+
         createQueues();
     }
 

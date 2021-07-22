@@ -85,7 +85,6 @@ public abstract class AbstractMessageConsumer<P> implements Consumer {
             log.error("M=handleDelivery, E=erro durante consumo. message={}", e.getMessage());
 
             retry(body, envelope, properties);
-
         }
     }
 

@@ -1,0 +1,7 @@
+rabbit-queue:
+  my-queue-name:
+    exchange: exchange-name
+    retry-policy:
+      max-retry: 1
+      retry-strategy: linear
+    dlq: true

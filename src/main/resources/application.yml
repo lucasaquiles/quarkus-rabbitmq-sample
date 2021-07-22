@@ -5,10 +5,4 @@ quarkus:
     password: guest
     client:
       port: 5672
-  queue-policy:
-    my-queue-name:
-      retryable: true
-      maxRetry: true
-      dlq: true
-
 
