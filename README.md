@@ -1,4 +1,4 @@
-# smallrey-rabbitmq-sample Project
+# quarkus-rabbit-client-sample Project
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 

@@ -75,8 +75,6 @@ public class QueueConfig {
             if (queueDetail.isRetryableQueue()) {
                 createQueue(channel, queueDetail.getRetryName(), queueDetail.getExchangeName(), queueDetail.getQueueName(), true);
             }
-
-
         } catch (IOException e) {
             log.error("M=createQueue, I=Erro criando queue. error={}", e.getMessage());
         }

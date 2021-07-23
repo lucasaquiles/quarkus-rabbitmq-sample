@@ -5,4 +5,10 @@ quarkus:
     password: guest
     client:
       port: 5672
-
+  rabbit-queue:
+    my-queue-name:
+      exchange: exchange-name
+      retry-policy:
+        max-retry: 1
+        retry-strategy: linear
+      dlq: true
