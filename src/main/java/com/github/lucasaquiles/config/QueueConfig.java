@@ -10,15 +10,15 @@ import io.quarkus.runtime.StartupEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-@ApplicationScoped
+@Singleton
 public class QueueConfig {
 
     private final Logger log = LoggerFactory.getLogger(QueueConfig.class);
@@ -34,7 +34,6 @@ public class QueueConfig {
     public void onApplicationStart(@Observes StartupEvent startupEvent) {
 
         log.info("M=onApplicationStart, I=starting queue config. conf={}", queuePolicyConfig);
-
         createQueues();
     }
 
@@ -96,8 +95,6 @@ public class QueueConfig {
 
     public void appendConsumer(DeclaredQueuesEnum declaredQueuesEnum, Consumer consumer) {
         try{
-            Connection connection = rabbitMQClient.connect();
-            Channel channel = connection.createChannel();
             channel.basicConsume(declaredQueuesEnum.getQueueName(), true, consumer);
         }catch (IOException e) {
             throw new RuntimeException(e);

@@ -6,16 +6,20 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import io.quarkiverse.rabbitmqclient.RabbitMQClient;
+import io.quarkus.runtime.StartupEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
-@ApplicationScoped
+@Singleton
 public class MessageSender {
 
     private Logger log = LoggerFactory.getLogger(MessageSender.class);
@@ -26,6 +30,20 @@ public class MessageSender {
     @Inject
     private RabbitMQClient rabbitMQClient;
     private Channel channel;
+
+    public void onApplicationStart(@Observes StartupEvent startupEvent) {
+
+        log.info("M=onApplicationStart, I=starting default sender");
+        try {
+
+            final Connection connection = rabbitMQClient.connect();
+            channel = connection.createChannel();
+
+        } catch (IOException e) {
+            log.error("M=createQueues, I=Erro criando queue. error={}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 
     public void send(final DeclaredQueuesEnum queue, final Serializable message) {
             final AMQP.BasicProperties basicProperties = new AMQP.BasicProperties("application/json",
@@ -42,12 +60,9 @@ public class MessageSender {
     }
 
     public void send(final String queueName, final String exchangeName, final Serializable message, final AMQP.BasicProperties basicProperties) {
-        Connection connection = rabbitMQClient.connect();
 
         try {
-            channel = connection.createChannel();
             channel.basicPublish(exchangeName, queueName, basicProperties, objectMapper.writeValueAsBytes(message));
-
             log.info("M=send, I=mensagem enviada. fila={}, mensagem={}", queueName, message);
         } catch (IOException e) {
 
