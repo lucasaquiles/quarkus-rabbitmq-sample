@@ -52,10 +52,6 @@ public enum DeclaredQueuesEnum {
         return maxRetry;
     }
 
-    public int getInterval() {
-        return interval;
-    }
-
     public RetryStrategyEnum getRetryStrategyEnum() {
         return retryStrategyEnum;
     }
