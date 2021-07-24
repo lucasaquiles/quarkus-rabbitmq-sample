@@ -40,7 +40,7 @@ public class QueueConfig {
     public void createQueues() {
         try {
 
-            final Connection connection = rabbitMQClient.connect();
+            Connection connection = rabbitMQClient.connect();
             channel = connection.createChannel();
 
             Stream.of(DeclaredQueuesEnum.values())
@@ -95,6 +95,8 @@ public class QueueConfig {
 
     public void appendConsumer(DeclaredQueuesEnum declaredQueuesEnum, Consumer consumer) {
         try{
+
+            channel = rabbitMQClient.connect().createChannel();
             channel.basicConsume(declaredQueuesEnum.getQueueName(), true, consumer);
         }catch (IOException e) {
             throw new RuntimeException(e);
