@@ -10,11 +10,11 @@ import javax.inject.Singleton;
 
 @Superior
 @Singleton
-public class SampleMessageConsumer extends AbstractMessageConsumer<BasicInformation> {
+public class SampleMessageHandler extends MessageHandler<BasicInformation> {
 
-    private final Logger log = LoggerFactory.getLogger(SampleMessageConsumer.class);
+    private final Logger log = LoggerFactory.getLogger(SampleMessageHandler.class);
 
-    public SampleMessageConsumer() {
+    public SampleMessageHandler() {
         super(BasicInformation.class);
     }
 

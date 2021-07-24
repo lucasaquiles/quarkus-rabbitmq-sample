@@ -22,16 +22,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
 
-public abstract class AbstractMessageConsumer<P> implements Consumer {
+public abstract class MessageHandler<P> implements Consumer {
 
-    private final Logger log = LoggerFactory.getLogger(AbstractMessageConsumer.class);
+    private final Logger log = LoggerFactory.getLogger(MessageHandler.class);
     private final String X_DEATH = "x-death";
     private final Class<P> clazz;
 
-    public AbstractMessageConsumer(Class<P> clazz) {
+    public MessageHandler(Class<P> clazz) {
         this.clazz = clazz;
     }
 

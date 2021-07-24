@@ -9,11 +9,11 @@ import javax.inject.Singleton;
 
 @Superior
 @Singleton
-public class SimpleRetriableMessageConsumer extends AbstractMessageConsumer<BasicInformation> {
+public class SimpleRetriableMessageHandler extends MessageHandler<BasicInformation> {
 
-    private Logger log = LoggerFactory.getLogger(SimpleRetriableMessageConsumer.class);
+    private Logger log = LoggerFactory.getLogger(SimpleRetriableMessageHandler.class);
 
-    public SimpleRetriableMessageConsumer() {
+    public SimpleRetriableMessageHandler() {
         super(BasicInformation.class);
     }
 
