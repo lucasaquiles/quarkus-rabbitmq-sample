@@ -1,10 +1,5 @@
 quarkus:
   rabbitmqclient:
-    virtual-host: /
-    username: guest
-    password: guest
-    client:
-      port: 5672
   rabbit-queue:
     my-queue-name:
       exchange: exchange-name
